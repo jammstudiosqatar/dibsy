@@ -6,6 +6,9 @@ function getQueryParams() {
     currency: params.get("currency"), // Currency (e.g., USD)
     description: params.get("description"), // Payment description
     userID: params.get("userID"), // Optional user identifier
+    customerID: params.get("customerID"),
+    membershipID: params.get("membershipID"),
+    redirectUrl: params.get("redirectUrl"),
   };
 }
 
@@ -92,6 +95,9 @@ form.addEventListener("submit", function (event) {
         currency: paymentDetails.currency, // Payment currency
         description: paymentDetails.description, // Payment description
         userID: paymentDetails.userID, // User ID
+        customerID: paymentDetails.customerID,
+        membershipID: paymentDetails.membershipID,
+        redirectUrl: paymentDetails.redirectUrl,
       }),
     })
       .then((response) => {
