@@ -9,7 +9,7 @@ var options = {
   },
 };
 
-const dibsy = Dibsy("pk_test_JdpeucILoEHCcmGVzvWBem4qRlMm24MHhPUa", {
+const dibsy = Dibsy("pk_test_q0ch38qc4I7njWnUUSSF8G5thPw0tTFt4uTH", {
   locale: "en_US",
 });
 var cardNumber = dibsy.createComponent("cardNumber", options);
