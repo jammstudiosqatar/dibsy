@@ -2,7 +2,7 @@ var options = {
   styles: {
     fontSize: "16px",
     color: "rgba(0, 0, 0, 0.8)",
-    backgroundColor: "transparent",
+    backgroundColor: "white",
     "&.is-invalid": {
       color: "#f42828",
     },
