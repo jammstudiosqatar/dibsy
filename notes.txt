@@ -1,0 +1,1 @@
+save current script.js and replace with one that integrates fetching dibsy API directly.
