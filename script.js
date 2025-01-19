@@ -1,3 +1,20 @@
+// Function to get query parameters from the URL
+function getQueryParams() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    amount: params.get("amount"), // Payment amount (e.g., 10000 for $100.00)
+    currency: params.get("currency"), // Currency (e.g., USD)
+    description: params.get("description"), // Payment description
+    userID: params.get("userID"), // Optional user identifier
+  };
+}
+
+// Extract payment details from the URL
+const paymentDetails = getQueryParams();
+
+// Log the payment details for debugging (optional)
+console.log("Payment Details:", paymentDetails);
+
 var options = {
   styles: {
     fontSize: "16px",
