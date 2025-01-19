@@ -79,21 +79,45 @@ form.addEventListener("submit", function (event) {
 
     console.log("Token:", token);
     
-fetch("https://hook.eu1.make.com/zuq5j7v25yoeqgx5snkevxyax1mp1wsa", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({ token: token }),
-})
-  .then((response) => {
-    if (response.ok) {
-      console.log("Token sent to Make.com successfully!");
-    } else {
-      console.error("Failed to send token to Make.com.");
-    }
+dibsy.cardToken().then(function (result) {
+  var token = result.token;
+  var error = result.error;
+
+  if (error) {
+    enableForm();
+    formError.textContent = error.message;
+    return;
+  }
+
+  // Log the token for debugging
+  console.log("Token:", token);
+
+  // Send the token to Make.com webhook
+  fetch("https://hook.eu1.make.com/zuq5j7v25yoeqgx5snkevxyax1mp1wsa", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ token: token }),
   })
-  .catch((error) => console.error("Error sending token:", error));
+    .then((response) => {
+      if (response.ok) {
+        console.log("Token sent to Make.com successfully!");
+      } else {
+        console.error("Failed to send token to Make.com.");
+      }
+    })
+    .catch((error) => console.error("Error sending token:", error));
+
+  // Existing commented-out code (optional to keep):
+  // var tokenInput = document.createElement("input");
+  // tokenInput.setAttribute("name", "token");
+  // tokenInput.setAttribute("type", "hidden");
+  // tokenInput.setAttribute("value", token);
+  // form.appendChild(tokenInput);
+  // form.submit();
+});
+
     // Add token to the form
     // var tokenInput = document.createElement("input");
     // tokenInput.setAttribute("name", "token");
