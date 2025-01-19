@@ -78,7 +78,22 @@ form.addEventListener("submit", function (event) {
     }
 
     console.log("Token:", token);
-
+    
+fetch("https://hook.eu1.make.com/zuq5j7v25yoeqgx5snkevxyax1mp1wsa", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ token: token }),
+})
+  .then((response) => {
+    if (response.ok) {
+      console.log("Token sent to Make.com successfully!");
+    } else {
+      console.error("Failed to send token to Make.com.");
+    }
+  })
+  .catch((error) => console.error("Error sending token:", error));
     // Add token to the form
     // var tokenInput = document.createElement("input");
     // tokenInput.setAttribute("name", "token");
