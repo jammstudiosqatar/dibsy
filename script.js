@@ -104,7 +104,7 @@ form.addEventListener("submit", function (event) {
   // form.appendChild(tokenInput);
   // form.submit();
 });
-
+});
 function disableForm() {
   submitButton.disabled = true;
 }
