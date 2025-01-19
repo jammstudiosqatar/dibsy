@@ -77,19 +77,32 @@ form.addEventListener("submit", function (event) {
       return;
     }
 
-    console.log("Token:", token);
+     console.log("Token:", token);
 
-    // Add token to the form
-    // var tokenInput = document.createElement("input");
-    // tokenInput.setAttribute("name", "token");
-    // tokenInput.setAttribute("type", "hidden");
-    // tokenInput.setAttribute("value", token);
+  // Send the token to Make.com webhook
+  fetch("https://hook.integromat.com/your-webhook-id", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ token: token }),
+  })
+    .then((response) => {
+      if (response.ok) {
+        console.log("Token sent to Make.com successfully!");
+      } else {
+        console.error("Failed to send token to Make.com.");
+      }
+    })
+    .catch((error) => console.error("Error sending token:", error));
 
-    // form.appendChild(tokenInput);
-
-    // Re-submit form to the server
-    //form.submit();
-  });
+  // Existing commented-out code (optional to keep):
+  // var tokenInput = document.createElement("input");
+  // tokenInput.setAttribute("name", "token");
+  // tokenInput.setAttribute("type", "hidden");
+  // tokenInput.setAttribute("value", token);
+  // form.appendChild(tokenInput);
+  // form.submit();
 });
 
 function disableForm() {
