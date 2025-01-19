@@ -76,36 +76,47 @@ var formError = document.getElementById("form-error");
 var submitButton = document.getElementById("submit-button");
 
 form.addEventListener("submit", function (event) {
-  event.preventDefault();
-  disableForm();
-
-  // Reset possible form error
-  formError.textContent = "";
+  event.preventDefault(); // Prevent default form submission
+  disableForm(); // Disable the form while processing
+  formError.textContent = ""; // Reset any previous errors
 
   // Get a payment token
-
   dibsy.cardToken().then(function (result) {
-    var token = result.token;
-    var error = result.error;
+    const token = result.token; // Dibsy token
+    const error = result.error;
 
     if (error) {
-      enableForm();
+      enableForm(); // Re-enable the form on error
       formError.textContent = error.message;
       return;
     }
 
     console.log("Token:", token);
 
-    // Add token to the form
-    // var tokenInput = document.createElement("input");
-    // tokenInput.setAttribute("name", "token");
-    // tokenInput.setAttribute("type", "hidden");
-    // tokenInput.setAttribute("value", token);
+    // Send token and payment details to Make.com
+    fetch("https://hook.eu1.make.com/zuq5j7v25yoeqgx5snkevxyax1mp1wsa", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: token, // Dibsy token
+        amount: paymentDetails.amount, // Payment amount from query params
+        currency: paymentDetails.currency, // Payment currency from query params
+        description: paymentDetails.description, // Payment description from query params
+        userID: paymentDetails.userID, // Optional user identifier
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log("Payment data sent to Make.com successfully!");
+        } else {
+          console.error("Failed to send payment data to Make.com.");
+        }
+      })
+      .catch((error) => console.error("Error sending payment data:", error));
 
-    // form.appendChild(tokenInput);
-
-    // Re-submit form to the server
-    //form.submit();
+    enableForm(); // Re-enable the form after sending
   });
 });
 
