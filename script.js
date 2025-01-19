@@ -29,7 +29,7 @@ var options = {
   },
 };
 
-const dibsy = Dibsy("pk_test_q0ch38qc4I7njWnUUSSF8G5thPw0tTFt4uTH", {
+const dibsy = Dibsy("pk_live_Cb1IChUrXLsKSJI51aq1nBhkTENev15SZfqU", {
   locale: "en_US",
 });
 var cardNumber = dibsy.createComponent("cardNumber", options);
