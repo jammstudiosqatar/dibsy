@@ -40,37 +40,24 @@ verificationCode.mount("#verification-code");
 
 var cardNumberError = document.getElementById("card-number-error");
 cardNumber.addEventListener("change", function (event) {
-  if (event.error && event.touched) {
-    cardNumberError.textContent = event.error;
-  } else {
-    cardNumberError.textContent = "";
-  }
+  cardNumberError.textContent = event.error && event.touched ? event.error : "";
 });
 
 var expiryDateError = document.getElementById("expiry-date-error");
 expiryDate.addEventListener("change", function (event) {
-  if (event.error && event.touched) {
-    expiryDateError.textContent = event.error;
-  } else {
-    expiryDateError.textContent = "";
-  }
+  expiryDateError.textContent =
+    event.error && event.touched ? event.error : "";
 });
-
-//
 
 var verificationCodeError = document.getElementById("verification-code-error");
 verificationCode.addEventListener("change", function (event) {
-  if (event.error && event.touched) {
-    verificationCodeError.textContent = event.error;
-  } else {
-    verificationCodeError.textContent = "";
-  }
+  verificationCodeError.textContent =
+    event.error && event.touched ? event.error : "";
 });
 
 /**
  * Submit handler
  */
-
 var form = document.getElementById("payForm");
 var formError = document.getElementById("form-error");
 var submitButton = document.getElementById("submit-button");
@@ -101,10 +88,10 @@ form.addEventListener("submit", function (event) {
       },
       body: JSON.stringify({
         token: token, // Dibsy token
-        amount: paymentDetails.amount, // Payment amount from query params
-        currency: paymentDetails.currency, // Payment currency from query params
-        description: paymentDetails.description, // Payment description from query params
-        userID: paymentDetails.userID, // Optional user identifier
+        amount: paymentDetails.amount, // Payment amount
+        currency: paymentDetails.currency, // Payment currency
+        description: paymentDetails.description, // Payment description
+        userID: paymentDetails.userID, // User ID
       }),
     })
       .then((response) => {
@@ -124,9 +111,6 @@ function disableForm() {
   submitButton.disabled = true;
 }
 
-/**
- * Enables the form inputs and submit button
- */
 function enableForm() {
   submitButton.disabled = false;
 }
