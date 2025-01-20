@@ -9,6 +9,7 @@ function getQueryParams() {
     customerID: params.get("customerID"),
     membershipID: params.get("membershipID"),
     redirectUrl: params.get("redirectUrl"),
+    payMethodID: params.get("payMethodID"),
   };
 }
 
@@ -98,6 +99,7 @@ form.addEventListener("submit", function (event) {
         customerID: paymentDetails.customerID,
         membershipID: paymentDetails.membershipID,
         redirectUrl: paymentDetails.redirectUrl,
+        payMethodID: paymentDetails.payMethodID,
       }),
     })
       .then((response) => {
