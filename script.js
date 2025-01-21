@@ -2,14 +2,13 @@
 function getQueryParams() {
   const params = new URLSearchParams(window.location.search);
   return {
-    amount: params.get("amount"), // Payment amount (e.g., 10000 for $100.00)
-    currency: params.get("currency"), // Currency (e.g., USD)
+    amount: params.get("amount"), // Payment amount (e.g., "1.00")
+    currency: params.get("currency"), // Currency code (e.g., "QAR")
     description: params.get("description"), // Payment description
-    userID: params.get("userID"), // Optional user identifier
-    customerID: params.get("customerID"),
-    membershipID: params.get("membershipID"),
-    redirectUrl: params.get("redirectUrl"),
-    payMethodID: params.get("payMethodID"),
+    userID: params.get("userID"), // User identifier
+    customerID: params.get("customerID"), // Customer ID
+    membershipID: params.get("membershipID"), // Membership ID
+    redirectUrl: params.get("redirectUrl"), // URL after payment is processed
   };
 }
 
@@ -84,32 +83,50 @@ form.addEventListener("submit", function (event) {
 
     console.log("Token:", token);
 
-    // Send token and payment details to Make.com
-    fetch("https://hook.eu1.make.com/zuq5j7v25yoeqgx5snkevxyax1mp1wsa", {
+    // Prepare the payload for Dibsy API
+    const payload = {
+      amount: {
+        value: paymentDetails.amount, // Payment amount (e.g., "1.00")
+        currency: paymentDetails.currency, // Currency code (e.g., "QAR")
+      },
+      description: paymentDetails.description, // Payment description
+      method: "creditcard", // Payment method
+      sequenceType: "recurring", // Sequence type
+      cardToken: token, // Dibsy token
+      customerId: paymentDetails.customerID, // Customer ID
+      redirectUrl: paymentDetails.redirectUrl, // Redirect URL after payment processing
+      webhookUrl: "https://hook.eu1.make.com/zuq5j7v25yoeqgx5snkevxyax1mp1wsa", // Webhook URL
+      metadata: {
+        userID: paymentDetails.userID, // Metadata: User ID
+        membershipID: paymentDetails.membershipID, // Metadata: Membership ID
+      },
+    };
+
+    // Call Dibsy's Create Payment API
+    fetch("https://api.dibsy.dev/v2/payments", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_SECRET_KEY", // Replace with your Dibsy secret key
       },
-      body: JSON.stringify({
-        token: token, // Dibsy token
-        amount: paymentDetails.amount, // Payment amount
-        currency: paymentDetails.currency, // Payment currency
-        description: paymentDetails.description, // Payment description
-        userID: paymentDetails.userID, // User ID
-        customerID: paymentDetails.customerID,
-        membershipID: paymentDetails.membershipID,
-        redirectUrl: paymentDetails.redirectUrl,
-        payMethodID: paymentDetails.payMethodID,
-      }),
+      body: JSON.stringify(payload),
     })
-      .then((response) => {
-        if (response.ok) {
-          console.log("Payment data sent to Make.com successfully!");
+      .then((response) => response.json()) // Parse JSON response
+      .then((data) => {
+        if (data._links && data._links.checkout) {
+          // Redirect the user to the 3DS page
+          console.log("Redirecting to 3DS:", data._links.checkout);
+          window.location.href = data._links.checkout;
         } else {
-          console.error("Failed to send payment data to Make.com.");
+          console.log("Payment processed without 3DS:", data);
+          // Optionally redirect the user to the post-payment URL
+          window.location.href = paymentDetails.redirectUrl;
         }
       })
-      .catch((error) => console.error("Error sending payment data:", error));
+      .catch((error) => {
+        console.error("Error processing payment:", error);
+        formError.textContent = "An error occurred while processing the payment.";
+      });
 
     enableForm(); // Re-enable the form after sending
   });
