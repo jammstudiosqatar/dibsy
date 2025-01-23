@@ -111,7 +111,10 @@ form.addEventListener("submit", function (event) {
       })
       .catch((error) => console.error("Error sending payment data:", error));
 
-// Keep only disableForm
+    enableForm(); // Re-enable the form after sending
+  });
+});
+
 function disableForm() {
   submitButton.disabled = true;
 }
