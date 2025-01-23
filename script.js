@@ -86,15 +86,15 @@ form.addEventListener("submit", function (event) {
 
     // Prepare the payload for Make.com webhook
     const payload = {
-      amount: paymentDetails.amount, // Payment amount (e.g., "1.00")
-      currency: paymentDetails.currency, // Payment currency (e.g., "QAR")
-      description: paymentDetails.description, // Payment description
-      cardToken: token, // Dibsy token
-      customerID: paymentDetails.customerID, // Customer ID
-      redirectUrl: paymentDetails.redirectUrl, // Redirect URL after payment processing
-      userID: paymentDetails.userID, // User ID
-      membershipID: paymentDetails.membershipID, // Membership ID
-      payMethodID: paymentDetails.payMethodID, // Payment method ID
+        token: token, // Dibsy token
+        amount: paymentDetails.amount, // Payment amount
+        currency: paymentDetails.currency, // Payment currency
+        description: paymentDetails.description, // Payment description
+        userID: paymentDetails.userID, // User ID
+        customerID: paymentDetails.customerID,
+        membershipID: paymentDetails.membershipID,
+        redirectUrl: paymentDetails.redirectUrl,
+        payMethodID: paymentDetails.payMethodID,
     };
 
     // Send the payload to Make.com webhook
