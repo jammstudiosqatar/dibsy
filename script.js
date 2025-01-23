@@ -113,12 +113,4 @@ form.addEventListener("submit", function (event) {
 
     enableForm(); // Re-enable the form after sending
   });
-});
-
-function disableForm() {
-  submitButton.disabled = true;
-}
-
-function enableForm() {
-  submitButton.disabled = false;
-}
+})
