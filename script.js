@@ -115,6 +115,21 @@ form.addEventListener("submit", function (event) {
 
           // Redirect the user to the checkout page
           window.location.href = data.checkout_url;
+          
+        // After checkout, handle the result dynamically
+      window.addEventListener("message", (event) => {
+        if (event.origin === "https://dibsy.com") {
+          const paymentStatus = event.data; // E.g., success or failure
+          console.log("Payment Status:", paymentStatus);
+
+          // Update the UI based on payment status
+          if (paymentStatus === "success") {
+            document.body.innerHTML = "<h1>Payment Successful</h1>";
+          } else {
+            document.body.innerHTML = "<h1>Payment Failed</h1>";
+          }
+        }
+      });
         } else {
           console.error("Checkout URL not found in the response.");
           formError.textContent = "Unable to process payment. Please try again later.";
