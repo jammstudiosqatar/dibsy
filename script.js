@@ -6,10 +6,10 @@ function getQueryParams() {
     currency: params.get("currency"), // Currency (e.g., USD)
     description: params.get("description"), // Payment description
     userID: params.get("userID"), // Optional user identifier
-    customerID: params.get("customerID"),
-    membershipID: params.get("membershipID"),
-    redirectUrl: params.get("redirectUrl"),
-    payMethodID: params.get("payMethodID"),
+    customerID: params.get("customerID"), // Customer ID
+    membershipID: params.get("membershipID"), // Membership ID
+    redirectUrl: params.get("redirectUrl"), // Redirect URL after payment processing
+    payMethodID: params.get("payMethodID"), // Payment method ID
   };
 }
 
@@ -84,34 +84,48 @@ form.addEventListener("submit", function (event) {
 
     console.log("Token:", token);
 
-    // Send token and payment details to Make.com
-    fetch("https://hook.eu1.make.com/zuq5j7v25yoeqgx5snkevxyax1mp1wsa", {
+    // Prepare the payload for Make.com webhook
+    const payload = {
+      amount: paymentDetails.amount, // Payment amount (e.g., "1.00")
+      currency: paymentDetails.currency, // Payment currency (e.g., "QAR")
+      description: paymentDetails.description, // Payment description
+      cardToken: token, // Dibsy token
+      customerID: paymentDetails.customerID, // Customer ID
+      redirectUrl: paymentDetails.redirectUrl, // Redirect URL after payment processing
+      userID: paymentDetails.userID, // User ID
+      membershipID: paymentDetails.membershipID, // Membership ID
+      payMethodID: paymentDetails.payMethodID, // Payment method ID
+    };
+
+    // Send the payload to Make.com webhook
+    fetch("https://hook.eu1.make.com/your-webhook-url", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        token: token, // Dibsy token
-        amount: paymentDetails.amount, // Payment amount
-        currency: paymentDetails.currency, // Payment currency
-        description: paymentDetails.description, // Payment description
-        userID: paymentDetails.userID, // User ID
-        customerID: paymentDetails.customerID,
-        membershipID: paymentDetails.membershipID,
-        redirectUrl: paymentDetails.redirectUrl,
-        payMethodID: paymentDetails.payMethodID,
-      }),
+      body: JSON.stringify(payload),
     })
-      .then((response) => {
-        if (response.ok) {
-          console.log("Payment data sent to Make.com successfully!");
+      .then((response) => response.json()) // Parse JSON response
+      .then((data) => {
+        console.log("Make.com Response:", data);
+
+        // Check if the `checkout_url` is present
+        if (data && data.checkout_url) {
+          console.log("Redirecting to checkout URL:", data.checkout_url);
+
+          // Redirect the user to the checkout page
+          window.location.href = data.checkout_url;
         } else {
-          console.error("Failed to send payment data to Make.com.");
+          console.error("Checkout URL not found in the response.");
+          formError.textContent = "Unable to process payment. Please try again later.";
+          enableForm(); // Re-enable the form on error
         }
       })
-      .catch((error) => console.error("Error sending payment data:", error));
-
-       enableForm(); // Re-enable the form after sending
+      .catch((error) => {
+        console.error("Error processing payment:", error);
+        formError.textContent = "An error occurred while processing the payment.";
+        enableForm(); // Re-enable the form on error
+      });
   });
 });
 
