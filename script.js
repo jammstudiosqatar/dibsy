@@ -7,7 +7,7 @@ function getQueryParams() {
     description: params.get("description"), // Payment description
     userID: params.get("userID"), // Optional user identifier
     customerID: params.get("customerID"), // Customer ID
-    membershipID: params.get("membershipID"), // Membership ID
+    processID: params.get("processID"), // Membership ID
     redirectUrl: params.get("redirectUrl"), // Redirect URL after payment processing
     payMethodID: params.get("payMethodID"), // Payment method ID
   };
@@ -114,7 +114,7 @@ form.addEventListener("submit", function (event) {
       description: paymentDetails.description, // Payment description
       userID: paymentDetails.userID, // User ID
       customerID: paymentDetails.customerID,
-      membershipID: paymentDetails.membershipID,
+      processID: paymentDetails.processID,
       redirectUrl: paymentDetails.redirectUrl,
       payMethodID: paymentDetails.payMethodID,
     };
