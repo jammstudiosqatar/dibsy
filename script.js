@@ -10,6 +10,8 @@ function getQueryParams() {
     checkoutID: params.get("checkoutID"), // Checkout ID
     redirectUrl: params.get("redirectUrl"), // Redirect URL after payment processing
     payMethodID: params.get("payMethodID"), // Payment method ID
+    membershipID: params.get("membershipID"),
+    customerName: params.get("customerName"),
   };
 }
 
@@ -117,6 +119,8 @@ form.addEventListener("submit", function (event) {
       checkoutID: paymentDetails.checkoutID,
       redirectUrl: paymentDetails.redirectUrl,
       payMethodID: paymentDetails.payMethodID,
+      membershipID: paymentDetails.membershipID,
+      customerName: paymentDetails.customerName,
     };
 
     // Send the payload to Make.com webhook
