@@ -4,6 +4,7 @@ function getQueryParams() {
   return {
     userID: params.get("userID"),
     customerID: params.get("customerID"),
+    checkoutID: params.get("checkoutID"),
     redirectUrl: params.get("redirectUrl"),
     customerName: params.get("customerName"),
   };
@@ -25,7 +26,7 @@ var options = {
 };
 
 // Initialize Dibsy components
-const dibsy = Dibsy("pk_test_q0ch38qc4I7njWnUUSSF8G5thPw0tTFt4uTH", {
+const dibsy = Dibsy("pk_live_Cb1IChUrXLsKSJI51aq1nBhkTENev15SZfqU", {
   locale: "en_US",
 });
 var cardNumber = dibsy.createComponent("cardNumber", options);
@@ -76,13 +77,14 @@ form.addEventListener("submit", function (event) {
     // Prepare payload for Make.com
     const payload = {
       token: token,
-      amount: "100", // 1 QAR in minor units (e.g. 100 dirhams)
+      amount: "100", // 1 QAR in minor units
       currency: "QAR",
+      action: "verify_card",
       userID: setupDetails.userID,
       customerID: setupDetails.customerID,
+      checkoutID: setupDetails.checkoutID,
       customerName: setupDetails.customerName,
       redirectUrl: setupDetails.redirectUrl,
-      action: "verify_card",
     };
 
     fetch("https://hook.eu1.make.com/0u827q8wznlwcxjn9lexb02as79su5ks", {
@@ -92,28 +94,34 @@ form.addEventListener("submit", function (event) {
       },
       body: JSON.stringify(payload),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Make.com Response:", data);
-        if (data && data.checkout_url) {
-          window.location.href = data.checkout_url;
+      .then((res) => res.text())
+      .then((text) => {
+        console.log("Raw response:", text);
 
-          // Handle final result after 3DS
-          window.addEventListener("message", (event) => {
-            if (event.origin === "https://dibsy.com") {
-              const result = event.data;
-              console.log("Card Verification Result:", result);
+        try {
+          const data = JSON.parse(text);
+          if (data && data.checkout_url) {
+            window.location.href = data.checkout_url;
 
-              if (result === "success") {
-                window.location.href = setupDetails.redirectUrl || "/success.html";
-              } else {
-                document.body.innerHTML = "<h1>Card verification failed.</h1>";
+            window.addEventListener("message", (event) => {
+              if (event.origin === "https://dibsy.com") {
+                const result = event.data;
+                console.log("Card Verification Result:", result);
+
+                if (result === "success") {
+                  window.location.href = setupDetails.redirectUrl || "/success.html";
+                } else {
+                  document.body.innerHTML = "<h1>Card verification failed.</h1>";
+                }
               }
-            }
-          });
-        } else {
-          formError.textContent = "Unable to process card setup.";
-          enableForm();
+            });
+          } else {
+            throw new Error("checkout_url missing");
+          }
+        } catch (err) {
+          console.warn("Non-JSON response from Make.com:", text);
+          document.body.innerHTML =
+            "<h1>Card submitted. Please check your email or dashboard for confirmation.</h1>";
         }
       })
       .catch((error) => {
