@@ -6,7 +6,6 @@ function getQueryParams() {
     customerID: params.get("customerID"),
     checkoutID: params.get("checkoutID"),
     payMethodID: params.get("payMethodID"),
-    membershipID: params.get("membershipID"),
     redirectUrl: params.get("redirectUrl"),
     customerName: params.get("customerName"),
   };
@@ -86,7 +85,6 @@ form.addEventListener("submit", function (event) {
       customerID: setupDetails.customerID,
       checkoutID: setupDetails.checkoutID,
       payMethodID: setupDetails.payMethodID,
-      membershipID: setupDetails.membershipID,
       customerName: setupDetails.customerName,
       redirectUrl: setupDetails.redirectUrl,
     };
