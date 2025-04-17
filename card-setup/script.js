@@ -5,6 +5,7 @@ function getQueryParams() {
     userID: params.get("userID"),
     customerID: params.get("customerID"),
     checkoutID: params.get("checkoutID"),
+    payMethodID: params.get("payMethodID"),
     redirectUrl: params.get("redirectUrl"),
     customerName: params.get("customerName"),
   };
@@ -26,7 +27,7 @@ var options = {
 };
 
 // Initialize Dibsy components
-const dibsy = Dibsy("pk_test_q0ch38qc4I7njWnUUSSF8G5thPw0tTFt4uTH", {
+const dibsy = Dibsy("pk_live_Cb1IChUrXLsKSJI51aq1nBhkTENev15SZfqU", {
   locale: "en_US",
 });
 var cardNumber = dibsy.createComponent("cardNumber", options);
@@ -83,6 +84,7 @@ form.addEventListener("submit", function (event) {
       userID: setupDetails.userID,
       customerID: setupDetails.customerID,
       checkoutID: setupDetails.checkoutID,
+      payMethodID: setupDetails.payMethodID,
       customerName: setupDetails.customerName,
       redirectUrl: setupDetails.redirectUrl,
     };
