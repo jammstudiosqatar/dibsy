@@ -27,7 +27,7 @@ var options = {
 };
 
 // Initialize Dibsy components
-const dibsy = Dibsy("pk_live_Cb1IChUrXLsKSJI51aq1nBhkTENev15SZfqU", {
+const dibsy = Dibsy("pk_live_r9bS9KN0ciGQ5Q63WjS5xPnkvXs3MXq9d21Khcm3", {
   locale: "en_US",
 });
 var cardNumber = dibsy.createComponent("cardNumber", options);
